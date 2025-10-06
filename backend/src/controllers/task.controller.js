@@ -131,10 +131,22 @@ const getTeskById = asyncHandler(async(req,res)=>{
     .json(new ApiResponse(200,task,"Task retrieved successfully"))
 })
 
+const getTasks = asyncHandler(async(req,res)=>{
+    const tasks = await Task.find({owner:req.user?._id}).sort({ createdAt: -1 })
+
+    if(!tasks){
+        throw new ApiError(404,"No tasks found")
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200,tasks,"Tasks retrieved successfully"))
+})
 
 export {
     createTask,
     updateTask,
     deleteTask,
     getTeskById,
+    getTasks
 }
