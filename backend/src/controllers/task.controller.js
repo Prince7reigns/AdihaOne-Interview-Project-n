@@ -34,6 +34,57 @@ const createTask = asyncHandler(async(req,res)=>{
       )
 })
 
+const updateTask = asyncHandler(async(req,res)=>{
+    const {title,description,periorty,dueDate} = req.body
+    const taskId = req.params.id;
+
+    if(!isValidObjectId(taskId)){
+        throw new ApiError(400,"Invalid task id")
+    }
+
+    const task = await Task.findById(taskId)
+    
+    if(!task){
+        throw new ApiError(404,"Task not found")
+    }
+
+    if (task.owner.toString() !== req.user?._id.toString()) {
+        throw new ApiError(400, "only owner can edit the task");
+    }
+
+    const update = {}
+    if(title){
+        update.title = title
+    }
+
+    if(description){
+        update.description = description
+    }
+
+    if(periorty){
+        update.periorty=periorty
+    }
+
+    if(dueDate){
+        update.dueDate = dueDate
+    }
+
+    const updatedTask = await Task.findByIdAndUpdate(
+        task._id,
+        {
+            $set:update
+        },
+        {
+            new:true
+        }
+    )
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200,updatedTask,"Task updated successfully"))
+})
+
 export {
     createTask,
+    updateTask,
 }
