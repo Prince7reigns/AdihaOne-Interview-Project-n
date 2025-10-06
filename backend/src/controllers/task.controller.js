@@ -2,12 +2,14 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import {Task} from "../models/task.model.js";
+import {isValidObjectId} from "mongoose";
+
 
 const createTask = asyncHandler(async(req,res)=>{
-    const {title,description,periorty,completed,deadline} = req.body 
+    const {title,description,periorty,deadline} = req.body 
 
     if(
-        [title,description,periorty,completed,deadline].some((feilds => feilds?.trim()===""))
+        [title,description,periorty].some((feilds => feilds?.trim()===""))
     ){
         throw new ApiError(400,"all feilds are required")
     }
@@ -17,8 +19,7 @@ const createTask = asyncHandler(async(req,res)=>{
           title,
           description,
           periorty,
-          completed,
-          deadline,
+          deadline:deadline || null,
           owner:req.user._id
         }
     )
@@ -36,10 +37,10 @@ const createTask = asyncHandler(async(req,res)=>{
 
 const updateTask = asyncHandler(async(req,res)=>{
     const {title,description,periorty,dueDate} = req.body
-    const taskId = req.params.id;
-
+    const taskId = req.params;
+   
     if(!isValidObjectId(taskId)){
-        throw new ApiError(400,"Invalid task id")
+        throw new ApiError(400,`Invalid task id`)
     }
 
     const task = await Task.findById(taskId)
@@ -143,10 +144,52 @@ const getTasks = asyncHandler(async(req,res)=>{
     .json(new ApiResponse(200,tasks,"Tasks retrieved successfully"))
 })
 
+const taskToggleComplete = asyncHandler(async(req,res)=>{
+
+     const taskId = req.params.id;
+
+    if(!isValidObjectId(taskId)){
+        throw new ApiError(400,"Invalid task id")
+    } 
+
+    const task = await Task.findOne({
+        _id:taskId,
+        owner:req.user?._id
+    })
+
+    if(!task){
+        throw new ApiError(404,"Task not found")
+    }
+
+    if (task.owner.toString() !== req.user?._id.toString()) {
+        throw new ApiError(400, "only owner can edit the task");
+    }
+
+    const toggleTask = await Task.findByIdAndUpdate(
+        task._id,
+        {
+            $set:{
+                completed:!task?.completed
+            }
+        }
+    )
+
+    if(!toggleTask){
+        throw new ApiError(500,"something went wrong")
+    }
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200,toggleTask,"task Toggle Completed")
+      )
+})
+
 export {
     createTask,
     updateTask,
     deleteTask,
     getTeskById,
-    getTasks
+    getTasks,
+    taskToggleComplete
 }
