@@ -110,9 +110,31 @@ const deleteTask = asyncHandler(async(req,res)=>{
 
 })
 
+const getTeskById = asyncHandler(async(req,res)=>{
+    const taskId = req.params.id;
+
+    if(!isValidObjectId(taskId)){
+        throw new ApiError(400,"Invalid task id")
+    }
+
+    const task = await Task.findOne({
+        _id:taskId,
+        owner:req.user?._id
+    })
+
+    if(!task){
+        throw new ApiError(404,"Task not found")
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200,task,"Task retrieved successfully"))
+})
+
 
 export {
     createTask,
     updateTask,
     deleteTask,
+    getTeskById,
 }
