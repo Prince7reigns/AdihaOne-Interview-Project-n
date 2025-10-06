@@ -73,7 +73,7 @@ const login = asyncHandler(async(req,res)=>{
 
     const {username,email,password} = req.body
 
-    if(!username || ! email){
+    if(!email){
         throw new ApiError(400,"Username or email is required")
     }
 
@@ -166,7 +166,7 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 
     const user = await User.findById(req.user?._id);
 
-    const isOldPasswordCorrect = await user.comparePassword(oldPassword);
+    const isOldPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
     if (!isOldPasswordCorrect) {
         throw new ApiError(400, "Incorrect old password");
@@ -185,9 +185,6 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 const updateUserDetails = asyncHandler(async(req, res) => {
     const {fullName, email} = req.body;
 
-    if (!fullName || !email) {
-        throw new ApiError(400, "All fields are required");
-    }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,

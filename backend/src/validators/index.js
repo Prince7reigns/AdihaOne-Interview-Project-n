@@ -19,7 +19,9 @@ const userRegisterValidator = () =>{
         body("password")
             .trim()
              .notEmpty()
-             .withMessage("password is required"),
+             .withMessage("password is required")
+             .isLength({min:6})
+             .withMessage("Username must be at least 3 char"),
         body("fullName")
            .trim()
            .optional()
@@ -40,14 +42,41 @@ const userLoginValidator = () =>{
 
 const userChangeCurrentPasswordValidator = () => {
   return [
-    body("oldPassword").notEmpty().withMessage("Old password is required"),
-    body("newPassword").notEmpty().withMessage("New password is required"),
+    body("oldPassword")
+    .notEmpty()
+    .withMessage("Old password is required")
+    .isLength({min:6})
+     .withMessage("Username must be at least 3 char"),,
+    body("newPassword").notEmpty().withMessage("New password is required")
+    .isLength({min:6})
+    .withMessage("Username must be at least 3 char"),,
   ];
 };
+
+const taskCreateValidator = () => [
+  body("title")
+    .notEmpty().withMessage("Title is required")
+    .isString().withMessage("Title must be a string")
+    .isLength({ min: 3 }).withMessage("Title must be at least 3 characters"),
+
+  body("description")
+    .optional()
+    .isString().withMessage("Description must be a string")
+    .isLength({ max: 500 }).withMessage("Description can’t exceed 500 characters"),
+
+  body("priority")
+    .notEmpty().withMessage("Priority is required")
+    .isIn(["low", "medium", "high"]).withMessage("Priority must be low, medium, or high"),
+
+  body("deadline")
+    .optional()
+    .isISO8601().withMessage("Deadline must be a valid date in ISO8601 format (YYYY-MM-DD)")
+];
 
 
 export {
     userRegisterValidator,
     userLoginValidator,
-    userChangeCurrentPasswordValidator
+    userChangeCurrentPasswordValidator,
+    taskCreateValidator
 }
