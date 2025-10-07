@@ -11,7 +11,7 @@ app.use(cookieparser())
 
 // cors config
 app.use(cors({
-    origin:process.env.CORS_ORIGIN,
+    origin:[process.env.CORS_ORIGIN,"https://task-manager-fbg3.onrender.com"],
     Credential:true,
     methods:["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
     allowedHeaders:["Content-Type","Authorization"]
