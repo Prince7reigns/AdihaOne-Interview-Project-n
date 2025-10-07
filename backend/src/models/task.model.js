@@ -10,7 +10,7 @@ const taskSchema= new Schema({
         type: String,
         default:' '
     },
-    periorty:{
+    priority:{
         type:String,
         enum: ['low', 'medium', 'high'],
         default: 'low'
@@ -19,7 +19,7 @@ const taskSchema= new Schema({
         type:Boolean,
         default:false
     },
-    deadline:{
+    dueDate:{
         type:Date
     },
     owner:{

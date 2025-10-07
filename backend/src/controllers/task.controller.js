@@ -6,10 +6,10 @@ import {isValidObjectId} from "mongoose";
 
 
 const createTask = asyncHandler(async(req,res)=>{
-    const {title,description,periorty,deadline} = req.body 
+    const {title,description,priority,dueDate} = req.body 
 
     if(
-        [title,description,periorty].some((feilds => feilds?.trim()===""))
+        [title,description,priority].some((feilds => feilds?.trim()===""))
     ){
         throw new ApiError(400,"all feilds are required")
     }
@@ -18,8 +18,8 @@ const createTask = asyncHandler(async(req,res)=>{
         {
           title,
           description,
-          periorty,
-          deadline:deadline || null,
+          priority,
+          dueDate:dueDate,
           owner:req.user._id
         }
     )
@@ -36,7 +36,7 @@ const createTask = asyncHandler(async(req,res)=>{
 })
 
 const updateTask = asyncHandler(async(req,res)=>{
-    const {title,description,periorty,dueDate} = req.body
+    const {title,description,priority,dueDate} = req.body
     const taskId = req.params;
    
     if(!isValidObjectId(taskId)){
@@ -62,8 +62,8 @@ const updateTask = asyncHandler(async(req,res)=>{
         update.description = description
     }
 
-    if(periorty){
-        update.periorty=periorty
+    if(priority){
+        update.periorty=priority
     }
 
     if(dueDate){
