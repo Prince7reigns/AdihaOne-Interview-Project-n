@@ -68,7 +68,7 @@ const taskCreateValidator = () => [
     .notEmpty().withMessage("Priority is required")
     .isIn(["low", "medium", "high"]).withMessage("Priority must be low, medium, or high"),
 
-  body("deadline")
+  body("dueDate")
     .optional()
     .isISO8601().withMessage("Deadline must be a valid date in ISO8601 format (YYYY-MM-DD)")
 ];
