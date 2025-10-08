@@ -39,7 +39,7 @@ const updateTask = asyncHandler(async(req,res)=>{
     const {title,description,priority,dueDate} = req.body
     const taskId = req.params;
    
-    if(!isValidObjectId(taskId)){
+    if(taskId){
         throw new ApiError(400,`Invalid task id`)
     }
 
@@ -89,7 +89,7 @@ const updateTask = asyncHandler(async(req,res)=>{
 const deleteTask = asyncHandler(async(req,res)=>{
     const taskId = req.params.id;
 
-    if(!isValidObjectId(taskId)){
+    if(taskId){
         throw new ApiError(400,"Invalid task id")
     }
 
@@ -114,7 +114,7 @@ const deleteTask = asyncHandler(async(req,res)=>{
 const getTeskById = asyncHandler(async(req,res)=>{
     const taskId = req.params.id;
 
-    if(!isValidObjectId(taskId)){
+    if(taskId){
         throw new ApiError(400,"Invalid task id")
     }
 
@@ -148,7 +148,7 @@ const taskToggleComplete = asyncHandler(async(req,res)=>{
 
      const taskId = req.params.id;
 
-    if(!isValidObjectId(taskId)){
+    if(taskId){
         throw new ApiError(400,"Invalid task id")
     } 
 
