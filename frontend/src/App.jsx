@@ -1,15 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Routes, Route } from 'react-router-dom';
+import SignupPage from './pages/signup';
+import LoginPage from './pages/login';
+import Home from './pages/home';
+import ProtectedRoute from './pages/ProtectedRoute';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <p className='text-red-200 font-black'>hello</p>
-    </>
-  )
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+
+      {/* Protected Home Route */}
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Fallback route */}
+      <Route path="*" element={<LoginPage />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
