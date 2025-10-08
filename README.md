@@ -135,5 +135,5 @@ GitHub: [@Prince7reigns](https://github.com/Prince7reigns)
 
 ## 🎬 Demo Link (Dummy Data)
 
-App : [task manager] ()
+App : [Task Manager App](https://task-manager-app-six-brown.vercel.app/)
 
